@@ -1,9 +1,5 @@
-version: 0.2
 
-env:
-  variables:
-    S3_BUCKET: "dotnet-sampleartifactstore"   # Your S3 bucket for artifact counter
-    COUNTER_FILE: "latest-build.txt"          # File to store the latest build number
+version: 0.2
 
 phases:
   install:
@@ -28,32 +24,19 @@ phases:
       - cp appspec.yaml publish/
       - cp start_app.sh publish/
 
-      # --- Versioning Logic ---
-      - echo "Fetching last build number from S3..."
-      - |
-        if aws s3 ls s3://$S3_BUCKET/$COUNTER_FILE; then
-          LATEST=$(aws s3 cp s3://$S3_BUCKET/$COUNTER_FILE -)
-        else
-          LATEST=0
-        fi
-      - BUILD_NUM=$(printf "%02d" $((LATEST + 1)))
-      - ARTIFACT_NAME="build-$BUILD_NUM.zip"
-      - echo "New build artifact: $ARTIFACT_NAME"
-
-      - echo "Zipping published files..."
-      - cd publish
-      - zip -r "../$ARTIFACT_NAME" *
-      - cd ..
-
-      - echo "Uploading updated build counter to S3..."
-      - echo $BUILD_NUM | aws s3 cp - s3://$S3_BUCKET/$COUNTER_FILE
-
   post_build:
     commands:
       - echo "Build and packaging completed."
       - ls -la publish
+      - echo "Zipping artifact for CodeDeploy..."
+      - cd publish
+      - zip -r ../build-artifact01.zip *
+      - cd ..
 
 artifacts:
   files:
-    - "build-*.zip"
+    - build-artifact01.zip
   discard-paths: yes
+
+
+
