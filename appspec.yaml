@@ -5,6 +5,6 @@ files:
     destination: /home/azureuser/sample-dotnet
 hooks:
   AfterInstall:
-    - location: scripts/start_app.sh
+    - location: start_app.sh
       timeout: 300
       runas: azureuser
