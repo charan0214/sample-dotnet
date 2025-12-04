@@ -30,7 +30,6 @@ phases:
       - echo "Fetching last build number from S3..."
       - 'LATEST=$(aws s3 ls s3://$S3_BUCKET/$COUNTER_FILE && aws s3 cp s3://$S3_BUCKET/$COUNTER_FILE - || echo 0)'
       - 'BUILD_NUM=$(printf "%02d" $((LATEST + 1)))'
-      - 'ARTIFACT_NAME="build-$BUILD_NUM.zip"'
       - echo "New build artifact: $ARTIFACT_NAME"
       - cd publish
       - zip -r "../$ARTIFACT_NAME" *
@@ -47,4 +46,5 @@ artifacts:
   files:
     - "build-*.zip"
   discard-paths: yes
+
 
