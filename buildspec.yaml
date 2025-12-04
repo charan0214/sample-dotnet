@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    S3_BUCKET: "dotnet-sampleartifactstore"   # Your S3 bucket for artifact counter
-    COUNTER_FILE: "latest-build.txt"          # File to store the latest build number
+    S3_BUCKET: "dotnet-sampleartifactstore"
+    COUNTER_FILE: "latest-build.txt"
 
 phases:
   install:
@@ -28,12 +28,9 @@ phases:
       - cp appspec.yml publish/
       - cp start_app.sh publish/
       - echo "Fetching last build number from S3..."
-      - |
-        LATEST=$(aws s3 ls s3://$S3_BUCKET/$COUNTER_FILE && \
-                 aws s3 cp s3://$S3_BUCKET/$COUNTER_FILE - || echo 0)
-      - |
-        BUILD_NUM=$(printf "%02d" $((LATEST + 1)))
-        ARTIFACT_NAME="build-$BUILD_NUM.zip"
+      - LATEST=$(aws s3 cp s3://$S3_BUCKET/$COUNTER_FILE - || echo 0)
+      - BUILD_NUM=$(printf "%02d" $((LATEST + 1)))
+      - ARTIFACT_NAME="build-$BUILD_NUM.zip"
       - echo "New build artifact: $ARTIFACT_NAME"
       - cd publish
       - zip -r "../$ARTIFACT_NAME" *
@@ -49,6 +46,3 @@ artifacts:
   files:
     - "build-*.zip"
   discard-paths: yes
-
-
-
