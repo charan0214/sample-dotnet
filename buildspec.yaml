@@ -26,10 +26,9 @@ phases:
       - ARTIFACT_NAME="build-artifact-$CODEBUILD_BUILD_ID.zip"
       - cd publish
       - zip -r "../$ARTIFACT_NAME" *
-      - cd ..
-      - echo "Artifact created: $ARTIFACT_NAME"
 
 artifacts:
   files:
     - 'build-artifact-*.zip'
   discard-paths: yes
+
