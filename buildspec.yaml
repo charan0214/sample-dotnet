@@ -1,4 +1,4 @@
-version: 0.2version: 0.2
+version: 0.2
 
 env:
   variables:
@@ -49,5 +49,6 @@ artifacts:
   files:
     - "build-*.zip"
   discard-paths: yes
+
 
 
