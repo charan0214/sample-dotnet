@@ -22,6 +22,11 @@ phases:
       - echo "Copying appspec.yml and scripts for CodeDeploy..."
       - cp appspec.yaml publish/
       - cp start_app.sh publish/
+      - ARTIFACT_NAME="build-artifact-$CODEBUILD_BUILD_ID.zip"
+      - cd publish
+      - zip -r "../$ARTIFACT_NAME" *
+      - cd ..
+      - echo "Artifact created: $ARTIFACT_NAME"
 
   post_build:
     commands:
@@ -36,6 +41,7 @@ artifacts:
   files:
     - build-artifact01.zip
   discard-paths: yes
+
 
 
 
