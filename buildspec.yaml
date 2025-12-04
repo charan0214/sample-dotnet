@@ -21,27 +21,15 @@ phases:
       - dotnet publish --configuration Release -o publish/
       - echo "Copying appspec.yml and scripts for CodeDeploy..."
       - cp appspec.yaml publish/
-      - cp start_app.sh publish/
+      - cp -r start_app.sh publish/
+      - echo "Creating versioned artifact..."
       - ARTIFACT_NAME="build-artifact-$CODEBUILD_BUILD_ID.zip"
       - cd publish
       - zip -r "../$ARTIFACT_NAME" *
       - cd ..
       - echo "Artifact created: $ARTIFACT_NAME"
 
-  post_build:
-    commands:
-      - echo "Build and packaging completed."
-      - ls -la publish
-      - echo "Zipping artifact for CodeDeploy..."
-      - cd publish
-      - zip -r ../build-artifact01.zip *
-      - cd ..
-
 artifacts:
   files:
-    - build-artifact01.zip
+    - 'build-artifact-*.zip'
   discard-paths: yes
-
-
-
-
