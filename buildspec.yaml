@@ -5,12 +5,12 @@ phases:
     runtime-versions:
       dotnet: 8.0
     commands:
-      - echo "Installing dependencies..."
+      - echo "Installing .NET 8 runtime..."
       - dotnet --version
 
   pre_build:
     commands:
-      - echo "Restoring packages..."
+      - echo "Restoring NuGet packages..."
       - dotnet restore
 
   build:
@@ -19,14 +19,20 @@ phases:
       - dotnet build --configuration Release
       - echo "Publishing project..."
       - dotnet publish --configuration Release -o publish/
+      - echo "Copying appspec.yml and scripts for CodeDeploy..."
+      - cp ../appspec.yml publish/
+      - cp -r ../scripts publish/
 
   post_build:
     commands:
-      - echo "Build & Publish completed successfully"
+      - echo "Build and packaging completed."
       - ls -la publish
+      - echo "Zipping artifact for CodeDeploy..."
+      - cd publish
+      - zip -r ../build-artifact01.zip *
+      - cd ..
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: publish
-  discard-paths: no
+    - build-artifact01.zip
+  discard-paths: yes
