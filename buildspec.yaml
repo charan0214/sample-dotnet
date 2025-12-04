@@ -21,7 +21,7 @@ phases:
       - dotnet publish --configuration Release -o publish/
       - echo "Copying appspec.yml and scripts for CodeDeploy..."
       - cp ../appspec.yml publish/
-      - cp -r ../scripts publish/
+      - cp -r ../start_app.sh publish/
 
   post_build:
     commands:
@@ -36,3 +36,4 @@ artifacts:
   files:
     - build-artifact01.zip
   discard-paths: yes
+
